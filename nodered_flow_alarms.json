@@ -1,0 +1,1126 @@
+[
+    {
+        "id": "4cd4def7.77742",
+        "type": "tab",
+        "label": "Keypads - alarm",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b87cfc10.f5a05",
+        "type": "mqtt in",
+        "z": "4cd4def7.77742",
+        "name": "keypad voordeur",
+        "topic": "zigbee2mqtt/Keypad_Voordeur/#",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "a7e95831.3143b8",
+        "x": 116,
+        "y": 454,
+        "wires": [
+            [
+                "87164f71.0bf7c8"
+            ]
+        ]
+    },
+    {
+        "id": "bd447fd7.5757",
+        "type": "mqtt in",
+        "z": "4cd4def7.77742",
+        "name": "keypad achterdeur",
+        "topic": "zigbee2mqtt/Keypad_Achterdeur/#",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "a7e95831.3143b8",
+        "x": 106,
+        "y": 557,
+        "wires": [
+            [
+                "87164f71.0bf7c8"
+            ]
+        ]
+    },
+    {
+        "id": "e80798f6.9e0668",
+        "type": "debug",
+        "z": "4cd4def7.77742",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1782,
+        "y": 687,
+        "wires": []
+    },
+    {
+        "id": "e2624f68.69c9b",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "Check Alarm Code",
+        "property": "payload.action_code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0000",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "1111",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2222",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 629,
+        "y": 500,
+        "wires": [
+            [
+                "fc0d73c3.76d78"
+            ],
+            [
+                "fc0d73c3.76d78"
+            ],
+            [
+                "fc0d73c3.76d78"
+            ]
+        ]
+    },
+    {
+        "id": "fc0d73c3.76d78",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "Check Action",
+        "property": "payload.action",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "disarm",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "arm_night_zones",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "arm_all_zones",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "arm_day_zones",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 821,
+        "y": 500,
+        "wires": [
+            [
+                "1074c3f5.417bac"
+            ],
+            [
+                "a3fe4950.c5a488"
+            ],
+            [
+                "c42d3f8a.46d058"
+            ],
+            [
+                "cbf72e66.d0d41"
+            ]
+        ]
+    },
+    {
+        "id": "24e7c83a.e16938",
+        "type": "mqtt out",
+        "z": "4cd4def7.77742",
+        "name": "mqtt_KeypadVoordeur",
+        "topic": "zigbee2mqtt/Keypad_Voordeur/set",
+        "qos": "",
+        "retain": "",
+        "broker": "a7e95831.3143b8",
+        "x": 1812,
+        "y": 424,
+        "wires": []
+    },
+    {
+        "id": "27875a56.2ce816",
+        "type": "mqtt out",
+        "z": "4cd4def7.77742",
+        "name": "mqtt_KeypadAchterdeur",
+        "topic": "zigbee2mqtt/Keypad_Achterdeur/set",
+        "qos": "",
+        "retain": "",
+        "broker": "a7e95831.3143b8",
+        "x": 1822,
+        "y": 484,
+        "wires": []
+    },
+    {
+        "id": "c445516c.5e99c",
+        "type": "delay",
+        "z": "4cd4def7.77742",
+        "name": "Exit delay",
+        "pauseType": "delay",
+        "timeout": "30",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1091,
+        "y": 586,
+        "wires": [
+            [
+                "2a1551cb.fff956"
+            ]
+        ]
+    },
+    {
+        "id": "a3fe4950.c5a488",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Arming Night (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"arming_night\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1051,
+        "y": 466,
+        "wires": [
+            [
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24"
+            ]
+        ]
+    },
+    {
+        "id": "cbf72e66.d0d41",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Arming Stay (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"arming_stay\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1051,
+        "y": 626,
+        "wires": [
+            [
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24"
+            ]
+        ]
+    },
+    {
+        "id": "1074c3f5.417bac",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Disarmed (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"disarm\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1041,
+        "y": 426,
+        "wires": [
+            [
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24",
+                "e999ec50.8ad558"
+            ]
+        ]
+    },
+    {
+        "id": "c42d3f8a.46d058",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Arming Away (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"arming_away\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1051,
+        "y": 506,
+        "wires": [
+            [
+                "c445516c.5e99c",
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24"
+            ]
+        ]
+    },
+    {
+        "id": "2a1551cb.fff956",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Arm All Zones (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"arm_all_zones\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1271,
+        "y": 566,
+        "wires": [
+            [
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24"
+            ]
+        ]
+    },
+    {
+        "id": "16a9681b.222ff8",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Entry Delay (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"entry_delay\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1041,
+        "y": 720,
+        "wires": [
+            [
+                "a4a077c5.2aaec8",
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24"
+            ]
+        ]
+    },
+    {
+        "id": "4e62372.f7a40c8",
+        "type": "debug",
+        "z": "4cd4def7.77742",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "a4a077c5.2aaec8",
+        "type": "delay",
+        "z": "4cd4def7.77742",
+        "name": "Entry delay",
+        "pauseType": "delay",
+        "timeout": "20",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1061,
+        "y": 800,
+        "wires": [
+            [
+                "7c4c5534.f7177c"
+            ]
+        ]
+    },
+    {
+        "id": "897e56af.3c591",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Motion/Door sensors triggered",
+        "info": "",
+        "x": 141,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "2778c119.712796",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Alarm Triggered (mode)",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"arm_mode\": {\n        \"mode\": \"in_alarm\",\n        \"transaction\": 23\n    }\n}",
+        "output": "json",
+        "x": 1519,
+        "y": 806,
+        "wires": [
+            [
+                "24e7c83a.e16938",
+                "27875a56.2ce816",
+                "e80798f6.9e0668",
+                "7bbcd51d.debb24",
+                "8d834b3c.41f958"
+            ]
+        ]
+    },
+    {
+        "id": "53f14030.c95c08",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "triggered On",
+        "info": "",
+        "x": 661,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "ae42e539.1fd148",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Keypad action",
+        "info": "",
+        "x": 107,
+        "y": 506,
+        "wires": []
+    },
+    {
+        "id": "ec61235c.b51098",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Determine action",
+        "info": "",
+        "x": 821,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "96b9ff27.c668f",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Set Status and Modes",
+        "info": "",
+        "x": 1051,
+        "y": 386,
+        "wires": []
+    },
+    {
+        "id": "6707a1b5.a61c",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Send Status and Mode to Keypads",
+        "info": "",
+        "x": 1852,
+        "y": 384,
+        "wires": []
+    },
+    {
+        "id": "9375d670.3a38a8",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Debugging",
+        "info": "",
+        "x": 1772,
+        "y": 647,
+        "wires": []
+    },
+    {
+        "id": "6a16fb79.710ec4",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Initiate Siren ON",
+        "info": "",
+        "x": 1788,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "a8aa8058.8c47c8",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Debugging",
+        "info": "",
+        "x": 600,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "fbef88a2.116b28",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "30 sec delay",
+        "info": "",
+        "x": 1081,
+        "y": 546,
+        "wires": []
+    },
+    {
+        "id": "b0f0de62.f78d8",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "20 sec delay",
+        "info": "",
+        "x": 1061,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "f688b187.6a39a",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Disarmed -> Siren Off",
+        "info": "",
+        "x": 1280,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "6cca3afa.d6b96c",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Check if Disarmed during entry delay",
+        "info": "",
+        "x": 1301,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "aeccc9b5.e5d5e8",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "Check TAMPER",
+        "property": "payload.tamper",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 429,
+        "y": 507,
+        "wires": [
+            [
+                "e2624f68.69c9b",
+                "4e62372.f7a40c8"
+            ],
+            [
+                "23ba2606.46e9aa"
+            ]
+        ]
+    },
+    {
+        "id": "87164f71.0bf7c8",
+        "type": "function",
+        "z": "4cd4def7.77742",
+        "name": "try catch",
+        "func": "try{\n    msg.payload = JSON.parse(msg.payload);\n    return [msg, null];\n}\ncatch(error){\n    \n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 267,
+        "y": 507,
+        "wires": [
+            [
+                "aeccc9b5.e5d5e8"
+            ]
+        ]
+    },
+    {
+        "id": "7bbcd51d.debb24",
+        "type": "api-call-service",
+        "z": "4cd4def7.77742",
+        "name": "SetArmMode",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "debugenabled": true,
+        "service_domain": "input_text",
+        "service": "set_value",
+        "entityId": "input_text.armstatus",
+        "data": "{\"value\":msg.payload.arm_mode.mode}",
+        "dataType": "jsonata",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 1782,
+        "y": 587,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7c4c5534.f7177c",
+        "type": "api-current-state",
+        "z": "4cd4def7.77742",
+        "name": "Check Arm State",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "disarm",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_text.armstatus",
+        "state_type": "str",
+        "state_location": "",
+        "override_payload": "none",
+        "entity_location": "",
+        "override_data": "none",
+        "blockInputOverrides": false,
+        "x": 1261,
+        "y": 800,
+        "wires": [
+            [
+                "e80798f6.9e0668"
+            ],
+            [
+                "2778c119.712796"
+            ]
+        ]
+    },
+    {
+        "id": "6161d49f.1ecf44",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Set arm mode in HA",
+        "info": "",
+        "x": 1802,
+        "y": 549,
+        "wires": []
+    },
+    {
+        "id": "8fcd8de0.539cf",
+        "type": "server-state-changed",
+        "z": "4cd4def7.77742",
+        "name": "detectie deuren",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "input_boolean.detectie_deuren",
+        "entityidfiltertype": "exact",
+        "outputinitially": false,
+        "state_type": "habool",
+        "haltifstate": "true",
+        "halt_if_type": "bool",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": true,
+        "for": 0,
+        "forType": "num",
+        "forUnits": "minutes",
+        "ignorePrevStateNull": false,
+        "ignorePrevStateUnknown": false,
+        "ignorePrevStateUnavailable": false,
+        "ignoreCurrentStateUnknown": false,
+        "ignoreCurrentStateUnavailable": false,
+        "x": 180,
+        "y": 780,
+        "wires": [
+            [
+                "23ba2606.46e9aa"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7dbb94dc.5229d4",
+        "type": "api-current-state",
+        "z": "4cd4def7.77742",
+        "name": "Check Arm State",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "disarm",
+        "halt_if_type": "str",
+        "halt_if_compare": "is_not",
+        "override_topic": false,
+        "entity_id": "input_text.armstatus",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 401,
+        "y": 880,
+        "wires": [
+            [
+                "fa647a18.db0ab8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "fc2cf51c.22e038",
+        "type": "server-state-changed",
+        "z": "4cd4def7.77742",
+        "name": "motion beneden",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "input_boolean.motion_beneden",
+        "entityidfiltertype": "exact",
+        "outputinitially": false,
+        "state_type": "habool",
+        "haltifstate": "true",
+        "halt_if_type": "bool",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": true,
+        "for": 0,
+        "forType": "num",
+        "forUnits": "minutes",
+        "ignorePrevStateNull": false,
+        "ignorePrevStateUnknown": false,
+        "ignorePrevStateUnavailable": false,
+        "ignoreCurrentStateUnknown": false,
+        "ignoreCurrentStateUnavailable": false,
+        "x": 191,
+        "y": 820,
+        "wires": [
+            [
+                "d9c831f.dc6fdd"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "104cbbd0.89fdcc",
+        "type": "server-state-changed",
+        "z": "4cd4def7.77742",
+        "name": "motion boven",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "input_boolean.motion_boven",
+        "entityidfiltertype": "exact",
+        "outputinitially": false,
+        "state_type": "habool",
+        "haltifstate": "true",
+        "halt_if_type": "bool",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": true,
+        "for": 0,
+        "forType": "num",
+        "forUnits": "minutes",
+        "ignorePrevStateNull": false,
+        "ignorePrevStateUnknown": false,
+        "ignorePrevStateUnavailable": false,
+        "ignoreCurrentStateUnknown": false,
+        "ignoreCurrentStateUnavailable": false,
+        "x": 201,
+        "y": 880,
+        "wires": [
+            [
+                "7dbb94dc.5229d4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "5a2badbd.3a330c",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "arming_night",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "arming_night",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 658,
+        "y": 760,
+        "wires": [
+            [
+                "16a9681b.222ff8"
+            ]
+        ]
+    },
+    {
+        "id": "fa647a18.db0ab8",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "arm_all_zones",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "arm_all_zones",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 668,
+        "y": 800,
+        "wires": [
+            [
+                "16a9681b.222ff8"
+            ]
+        ]
+    },
+    {
+        "id": "bf892dfd.4b783",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "arming_stay",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "arming_stay",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 658,
+        "y": 840,
+        "wires": [
+            [
+                "16a9681b.222ff8"
+            ]
+        ]
+    },
+    {
+        "id": "b8783824.35f7e8",
+        "type": "switch",
+        "z": "4cd4def7.77742",
+        "name": "arm_day_zones",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "arm_day_zones",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 671,
+        "y": 880,
+        "wires": [
+            [
+                "16a9681b.222ff8"
+            ]
+        ]
+    },
+    {
+        "id": "d9c831f.dc6fdd",
+        "type": "api-current-state",
+        "z": "4cd4def7.77742",
+        "name": "Check Arm State",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "disarm",
+        "halt_if_type": "str",
+        "halt_if_compare": "is_not",
+        "override_topic": false,
+        "entity_id": "input_text.armstatus",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 401,
+        "y": 820,
+        "wires": [
+            [
+                "5a2badbd.3a330c",
+                "fa647a18.db0ab8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "23ba2606.46e9aa",
+        "type": "api-current-state",
+        "z": "4cd4def7.77742",
+        "name": "Check Arm State",
+        "server": "6d000dde.3e0b04",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "disarm",
+        "halt_if_type": "str",
+        "halt_if_compare": "is_not",
+        "override_topic": false,
+        "entity_id": "input_text.armstatus",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 401,
+        "y": 760,
+        "wires": [
+            [
+                "5a2badbd.3a330c",
+                "fa647a18.db0ab8",
+                "b8783824.35f7e8",
+                "bf892dfd.4b783"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7e31b621.7cdb6",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Check not disarm",
+        "info": "",
+        "x": 391,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "69f31d94.6b670c",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Alarm triggered",
+        "info": "",
+        "x": 1031,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "8d834b3c.41f958",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Heiman SIREN ON",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"warning\": {\n        \"duration\": 300,\n        \"mode\": \"emergency\",\n        \"strobe\": true\n    }\n}",
+        "output": "json",
+        "x": 1801,
+        "y": 840,
+        "wires": [
+            [
+                "a503b30.6fbfc5",
+                "e80798f6.9e0668",
+                "1c5fa00b.015ed8"
+            ]
+        ]
+    },
+    {
+        "id": "a503b30.6fbfc5",
+        "type": "mqtt out",
+        "z": "4cd4def7.77742",
+        "name": "mqtt_HeimanSiren",
+        "topic": "zigbee2mqtt/Siren_HM/set",
+        "qos": "",
+        "retain": "",
+        "broker": "a7e95831.3143b8",
+        "x": 2050,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "d71e0f70.5f9bb",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Send commands to 2xHeiman mqtt",
+        "info": "",
+        "x": 2100,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "24b344da.b60904",
+        "type": "template",
+        "z": "4cd4def7.77742",
+        "name": "Heiman SIREN OFF",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"warning\": {\n        \"duration\": 0,\n        \"mode\": \"stop\",\n        \"strobe\": false\n    }\n}",
+        "output": "json",
+        "x": 1808,
+        "y": 936,
+        "wires": [
+            [
+                "a503b30.6fbfc5",
+                "e80798f6.9e0668",
+                "1c5fa00b.015ed8"
+            ]
+        ]
+    },
+    {
+        "id": "25871271.e2dfbe",
+        "type": "comment",
+        "z": "4cd4def7.77742",
+        "name": "Initiate Siren OFF",
+        "info": "",
+        "x": 1800,
+        "y": 897,
+        "wires": []
+    },
+    {
+        "id": "dba84c69.b614c",
+        "type": "link in",
+        "z": "4cd4def7.77742",
+        "name": "",
+        "links": [
+            "e999ec50.8ad558"
+        ],
+        "x": 1635,
+        "y": 920,
+        "wires": [
+            [
+                "24b344da.b60904"
+            ]
+        ]
+    },
+    {
+        "id": "e999ec50.8ad558",
+        "type": "link out",
+        "z": "4cd4def7.77742",
+        "name": "",
+        "links": [
+            "dba84c69.b614c"
+        ],
+        "x": 1195,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1c5fa00b.015ed8",
+        "type": "mqtt out",
+        "z": "4cd4def7.77742",
+        "name": "mqtt_HeimanSiren2",
+        "topic": "zigbee2mqtt/Siren_HM2/set",
+        "qos": "",
+        "retain": "",
+        "broker": "a7e95831.3143b8",
+        "x": 2050,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "a7e95831.3143b8",
+        "type": "mqtt-broker",
+        "name": "MasterPi",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "6d000dde.3e0b04",
+        "type": "server",
+        "name": "Home Assistant",
+        "legacy": false,
+        "addon": true,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": false,
+        "cacheJson": true
+    }
+]
